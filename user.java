@@ -9,6 +9,7 @@ public abstract class user {
         this.email = email;
         this.password = password;
     }
+    public abstract String getRole();
 
     public String getName() {
         return name;
