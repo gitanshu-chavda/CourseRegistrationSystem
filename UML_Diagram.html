@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>University Course Registration System — UML Class Diagram</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f0f2f5; font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; }
+  h1 { text-align: center; font-size: 18px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px; }
+  .subtitle { text-align: center; font-size: 12px; color: #666; margin-bottom: 16px; }
+
+  /* Legend */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+    margin-bottom: 18px; background: #fff; padding: 10px 20px;
+    border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #333; }
+  .legend-box { width: 16px; height: 16px; border-radius: 3px; border: 1.5px solid; }
+
+  /* Canvas */
+  .canvas { position: relative; width: 1800px; height: 1260px; margin: 0 auto; background: #fff;
+    border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
+
+  /* UML Class box */
+  .uml-class {
+    position: absolute;
+    border-radius: 6px;
+    font-size: 11px;
+    border: 1.5px solid;
+    overflow: hidden;
+    min-width: 160px;
+  }
+  .uml-class .cls-header {
+    padding: 6px 8px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+  .uml-class .stereotype {
+    font-size: 9.5px;
+    font-weight: 400;
+    display: block;
+    opacity: 0.85;
+  }
+  .uml-class .cls-section {
+    padding: 5px 8px;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    line-height: 1.7;
+  }
+  .uml-class .cls-section div { white-space: nowrap; font-size: 10.5px; }
+  .uml-class .cls-section div.method { font-style: italic; }
+
+  /* Pattern badge */
+  .pattern-badge {
+    position: absolute;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.4px;
+  }
+
+  /* Connector SVG overlay */
+  svg.connectors {
+    position: absolute; top: 0; left: 0;
+    width: 1800px; height: 1260px;
+    pointer-events: none; overflow: visible;
+  }
+
+  /* Color themes */
+  .theme-abstract  { background: #EDE9FE; border-color: #7C3AED; }
+  .theme-abstract  .cls-header { background: #7C3AED; color: #fff; }
+  .theme-abstract  .cls-section { background: #F5F3FF; color: #3b0764; }
+
+  .theme-concrete  { background: #E0F2FE; border-color: #0284C7; }
+  .theme-concrete  .cls-header { background: #0284C7; color: #fff; }
+  .theme-concrete  .cls-section { background: #F0F9FF; color: #0c4a6e; }
+
+  .theme-interface { background: #ECFDF5; border-color: #059669; }
+  .theme-interface .cls-header { background: #059669; color: #fff; }
+  .theme-interface .cls-section { background: #F0FDF4; color: #064e3b; }
+
+  .theme-service   { background: #FFF7ED; border-color: #EA580C; }
+  .theme-service   .cls-header { background: #EA580C; color: #fff; }
+  .theme-service   .cls-section { background: #FFF7ED; color: #7c2d12; }
+
+  .theme-repo      { background: #FDF4FF; border-color: #A21CAF; }
+  .theme-repo      .cls-header { background: #A21CAF; color: #fff; }
+  .theme-repo      .cls-section { background: #FDF4FF; color: #4a044e; }
+
+  .theme-exception { background: #FEF2F2; border-color: #DC2626; }
+  .theme-exception .cls-header { background: #DC2626; color: #fff; }
+  .theme-exception .cls-section { background: #FEF2F2; color: #7f1d1d; }
+
+  .theme-util      { background: #F0FDF4; border-color: #16A34A; }
+  .theme-util      .cls-header { background: #16A34A; color: #fff; }
+  .theme-util      .cls-section { background: #F0FDF4; color: #14532d; }
+
+  .theme-enum      { background: #FFFBEB; border-color: #D97706; }
+  .theme-enum      .cls-header { background: #D97706; color: #fff; }
+  .theme-enum      .cls-section { background: #FFFBEB; color: #78350f; }
+
+  .badge-singleton { background: #7C3AED; color: #fff; }
+  .badge-factory   { background: #EA580C; color: #fff; }
+  .badge-observer  { background: #059669; color: #fff; }
+  .badge-strategy  { background: #0284C7; color: #fff; }
+  .badge-template  { background: #A21CAF; color: #fff; }
+
+  /* Scroll wrapper */
+  .scroll-wrap { overflow: auto; }
+</style>
+</head>
+<body>
+
+<h1>University Course Registration System — UML Class Diagram</h1>
+<p class="subtitle">Assignment 1 + 2 &nbsp;|&nbsp; Java &nbsp;|&nbsp; Design Patterns: Singleton · Factory · Observer · Strategy · Template Method</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:#EDE9FE;border-color:#7C3AED"></div> Abstract class</div>
+  <div class="legend-item"><div class="legend-box" style="background:#E0F2FE;border-color:#0284C7"></div> Concrete class</div>
+  <div class="legend-item"><div class="legend-box" style="background:#ECFDF5;border-color:#059669"></div> Interface</div>
+  <div class="legend-item"><div class="legend-box" style="background:#FFF7ED;border-color:#EA580C"></div> Service</div>
+  <div class="legend-item"><div class="legend-box" style="background:#FDF4FF;border-color:#A21CAF"></div> Repository (Singleton)</div>
+  <div class="legend-item"><div class="legend-box" style="background:#FEF2F2;border-color:#DC2626"></div> Exception</div>
+  <div class="legend-item"><div class="legend-box" style="background:#FFFBEB;border-color:#D97706"></div> Enum / Generic</div>
+  <div class="legend-item">
+    <svg width="40" height="14"><line x1="0" y1="7" x2="30" y2="7" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/><defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#333"/></marker></defs></svg> Association / uses
+  </div>
+  <div class="legend-item">
+    <svg width="40" height="14"><line x1="0" y1="7" x2="30" y2="7" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#inh)"/><defs><marker id="inh" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="none" stroke="#7C3AED" stroke-width="1.3"/></marker></defs></svg> Inheritance / implements
+  </div>
+  <div class="legend-item">
+    <svg width="40" height="14"><line x1="0" y1="7" x2="30" y2="7" stroke="#059669" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#dep)"/><defs><marker id="dep" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#059669"/></marker></defs></svg> Dependency
+  </div>
+</div>
+
+<div class="scroll-wrap">
+<div class="canvas">
+
+<!-- ════════════════════════════════════════════════
+     LAYER 1 — MODEL: USER HIERARCHY (left side)
+     ════════════════════════════════════════════════ -->
+
+<!-- User (abstract) -->
+<div class="uml-class theme-abstract" style="left:30px;top:30px;width:195px;">
+  <div class="cls-header"><span class="stereotype">«abstract»</span>User</div>
+  <div class="cls-section">
+    <div>– id: String</div>
+    <div>– name: String</div>
+    <div>– email: String</div>
+    <div>– password: String</div>
+  </div>
+  <div class="cls-section">
+    <div class="method">+ getRole(): String</div>
+    <div class="method">+ displayDashboard()</div>
+    <div>+ checkPassword(s): bool</div>
+    <div>+ getId(): String</div>
+    <div>+ getName(): String</div>
+  </div>
+</div>
+
+<!-- Student -->
+<div class="uml-class theme-concrete" style="left:30px;top:260px;width:210px;">
+  <div class="cls-header">Student</div>
+  <div class="cls-section">
+    <div>– currentSemester: int</div>
+    <div>– semesterComplete: bool</div>
+    <div>– currentEnrollments: List</div>
+    <div>– completedSemesters: Map</div>
+    <div>– complaintIds: List</div>
+  </div>
+  <div class="cls-section">
+    <div>+ enroll(e: Enrollment)</div>
+    <div>+ dropCourse(code: String)</div>
+    <div>+ isEnrolled(code): bool</div>
+    <div>+ currentCreditLoad(): int</div>
+    <div>+ allGradesAssigned(): bool</div>
+    <div>+ completeSemester()</div>
+    <div>+ calculateCGPA(): double</div>
+    <div>+ getCompletedCourseCodes()</div>
+  </div>
+</div>
+
+<!-- Professor -->
+<div class="uml-class theme-concrete" style="left:255px;top:260px;width:195px;">
+  <div class="cls-header">Professor</div>
+  <div class="cls-section">
+    <div>– department: String</div>
+    <div>– officeHours: String</div>
+    <div>– assignedCourseCodes: List</div>
+  </div>
+  <div class="cls-section">
+    <div>+ assignCourse(code)</div>
+    <div>+ unassignCourse(code)</div>
+    <div>+ getAssignedCourseCodes()</div>
+    <div>+ getDepartment(): String</div>
+    <div>+ setOfficeHours(oh)</div>
+  </div>
+</div>
+
+<!-- Admin -->
+<div class="uml-class theme-concrete" style="left:462px;top:260px;width:185px;">
+  <div class="cls-header">Admin</div>
+  <div class="cls-section">
+    <div>– FIXED_PASSWORD: String</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getRole(): String</div>
+    <div>+ displayDashboard()</div>
+    <div>+ getFixedPassword(): String</div>
+  </div>
+</div>
+
+<!-- TeachingAssistant -->
+<div class="uml-class theme-concrete" style="left:30px;top:530px;width:215px;">
+  <div class="cls-header"><span class="stereotype">«Assignment 2»</span>TeachingAssistant</div>
+  <div class="cls-section">
+    <div>– assistingCourseCode: String</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getRole(): String</div>
+    <div>+ viewStudentGradesForCourse()</div>
+    <div>+ suggestGrade(studentId, grade)</div>
+    <div>+ getAssistingCourseCode()</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 2 — MODEL: COURSE / ENROLLMENT / COMPLAINT
+     ════════════════════════════════════════════════ -->
+
+<!-- Course -->
+<div class="uml-class theme-concrete" style="left:665px;top:30px;width:215px;">
+  <div class="cls-header">Course</div>
+  <div class="cls-section">
+    <div>– code: String</div>
+    <div>– title: String</div>
+    <div>– professorId: String</div>
+    <div>– credits: int</div>
+    <div>– semester: int</div>
+    <div>– enrollmentLimit: int</div>
+    <div>– enrolled: int</div>
+    <div>– prerequisites: List&lt;String&gt;</div>
+    <div>– schedule: String</div>
+    <div>– location: String</div>
+    <div>– syllabus: String</div>
+  </div>
+  <div class="cls-section">
+    <div>+ isFull(): bool</div>
+    <div>+ incrementEnrollment()</div>
+    <div>+ decrementEnrollment()</div>
+    <div>+ printDetails(profName)</div>
+  </div>
+</div>
+
+<!-- Enrollment -->
+<div class="uml-class theme-concrete" style="left:665px;top:310px;width:215px;">
+  <div class="cls-header">Enrollment</div>
+  <div class="cls-section">
+    <div>– studentId: String</div>
+    <div>– studentName: String</div>
+    <div>– courseCode: String</div>
+    <div>– courseTitle: String</div>
+    <div>– credits: int</div>
+    <div>– grade: String</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getGrade(): String</div>
+    <div>+ setGrade(g: String)</div>
+    <div>+ getStudentId(): String</div>
+    <div>+ getCourseCode(): String</div>
+  </div>
+</div>
+
+<!-- Complaint -->
+<div class="uml-class theme-concrete" style="left:665px;top:520px;width:215px;">
+  <div class="cls-header">Complaint</div>
+  <div class="cls-section">
+    <div>– id: String</div>
+    <div>– studentId: String</div>
+    <div>– description: String</div>
+    <div>– submittedDate: LocalDate</div>
+    <div>– status: Status</div>
+    <div>– resolutionDetails: String</div>
+  </div>
+  <div class="cls-section">
+    <div>+ resolve(details: String)</div>
+    <div>+ getStatus(): Status</div>
+    <div>+ print()</div>
+  </div>
+</div>
+
+<!-- Complaint.Status enum -->
+<div class="uml-class theme-enum" style="left:665px;top:720px;width:165px;">
+  <div class="cls-header"><span class="stereotype">«enum»</span>Complaint.Status</div>
+  <div class="cls-section">
+    <div>PENDING</div>
+    <div>RESOLVED</div>
+  </div>
+</div>
+
+<!-- Feedback<T> -->
+<div class="uml-class theme-enum" style="left:665px;top:820px;width:215px;">
+  <div class="cls-header"><span class="stereotype">«generic» Assignment 2</span>Feedback&lt;T&gt;</div>
+  <div class="cls-section">
+    <div>– studentId: String</div>
+    <div>– courseCode: String</div>
+    <div>– value: T</div>
+    <div>– date: LocalDate</div>
+    <div>– type: String</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getValue(): T</div>
+    <div>+ getType(): String</div>
+    <div>+ toString(): String</div>
+  </div>
+</div>
+<div class="pattern-badge badge-factory" style="left:667px;top:822px;">T = Integer | String</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 3 — REPOSITORIES (Singleton)
+     ════════════════════════════════════════════════ -->
+
+<!-- CourseRepository -->
+<div class="uml-class theme-repo" style="left:930px;top:30px;width:205px;">
+  <div class="cls-header"><span class="stereotype">«Singleton»</span>CourseRepository</div>
+  <div class="cls-section">
+    <div>– instance: CourseRepository</div>
+    <div>– courses: List&lt;Course&gt;</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getInstance(): CourseRepository</div>
+    <div>+ add(c: Course)</div>
+    <div>+ remove(code): bool</div>
+    <div>+ findByCode(code): Optional</div>
+    <div>+ getBySemester(sem): List</div>
+    <div>+ getByProfessor(id): List</div>
+    <div>+ getAll(): List</div>
+  </div>
+</div>
+<div class="pattern-badge badge-singleton" style="left:932px;top:32px;">SINGLETON</div>
+
+<!-- UserRepository -->
+<div class="uml-class theme-repo" style="left:930px;top:300px;width:205px;">
+  <div class="cls-header"><span class="stereotype">«Singleton»</span>UserRepository</div>
+  <div class="cls-section">
+    <div>– instance: UserRepository</div>
+    <div>– students: Map</div>
+    <div>– professors: Map</div>
+    <div>– admins: Map</div>
+    <div>– tas: Map</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getInstance(): UserRepository</div>
+    <div>+ addStudent(s)</div>
+    <div>+ findStudentByEmail(email)</div>
+    <div>+ getAllStudents(): Collection</div>
+    <div>+ addProfessor(p)</div>
+    <div>+ findProfessorById(id)</div>
+    <div>+ addTA(ta)</div>
+    <div>+ nextStudentId(): String</div>
+  </div>
+</div>
+<div class="pattern-badge badge-singleton" style="left:932px;top:302px;">SINGLETON</div>
+
+<!-- ComplaintRepository -->
+<div class="uml-class theme-repo" style="left:930px;top:570px;width:205px;">
+  <div class="cls-header"><span class="stereotype">«Singleton»</span>ComplaintRepository</div>
+  <div class="cls-section">
+    <div>– instance: ComplaintRepository</div>
+    <div>– complaints: List</div>
+  </div>
+  <div class="cls-section">
+    <div>+ getInstance()</div>
+    <div>+ add(c: Complaint)</div>
+    <div>+ findById(id): Optional</div>
+    <div>+ filterByStatus(s): List</div>
+    <div>+ filterByDate(from,to): List</div>
+    <div>+ getByStudent(id): List</div>
+  </div>
+</div>
+<div class="pattern-badge badge-singleton" style="left:932px;top:572px;">SINGLETON</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 4 — FACTORY
+     ════════════════════════════════════════════════ -->
+
+<div class="uml-class theme-service" style="left:930px;top:790px;width:205px;">
+  <div class="cls-header"><span class="stereotype">«Factory»</span>UserFactory</div>
+  <div class="cls-section">
+    <div>– userRepo: UserRepository</div>
+  </div>
+  <div class="cls-section">
+    <div>+ createStudent(...): Student</div>
+    <div>+ createProfessor(...): Professor</div>
+    <div>+ createAdmin(...): Admin</div>
+    <div>+ createTA(...): TeachingAssistant</div>
+  </div>
+</div>
+<div class="pattern-badge badge-factory" style="left:932px;top:792px;">FACTORY</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 5 — OBSERVER
+     ════════════════════════════════════════════════ -->
+
+<!-- EnrollmentObserver interface -->
+<div class="uml-class theme-interface" style="left:1185px;top:30px;width:215px;">
+  <div class="cls-header"><span class="stereotype">«interface»</span>EnrollmentObserver</div>
+  <div class="cls-section">
+    <div class="method">+ onCourseEnrolled(name,code,seats)</div>
+    <div class="method">+ onCourseDropped(name,code)</div>
+    <div class="method">+ onCourseFull(code)</div>
+  </div>
+</div>
+<div class="pattern-badge badge-observer" style="left:1187px;top:32px;">OBSERVER</div>
+
+<!-- ConsoleEnrollmentObserver -->
+<div class="uml-class theme-concrete" style="left:1185px;top:185px;width:215px;">
+  <div class="cls-header">ConsoleEnrollmentObserver</div>
+  <div class="cls-section">
+    <div>+ onCourseEnrolled(...)</div>
+    <div>+ onCourseDropped(...)</div>
+    <div>+ onCourseFull(...)</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 6 — STRATEGY
+     ════════════════════════════════════════════════ -->
+
+<!-- GpaCalculationStrategy interface -->
+<div class="uml-class theme-interface" style="left:1185px;top:320px;width:215px;">
+  <div class="cls-header"><span class="stereotype">«interface»</span>GpaCalculationStrategy</div>
+  <div class="cls-section">
+    <div class="method">+ calculate(enrollments): double</div>
+    <div class="method">+ getName(): String</div>
+  </div>
+</div>
+<div class="pattern-badge badge-strategy" style="left:1187px;top:322px;">STRATEGY</div>
+
+<!-- TenPointGpaStrategy -->
+<div class="uml-class theme-concrete" style="left:1185px;top:430px;width:215px;">
+  <div class="cls-header">TenPointGpaStrategy</div>
+  <div class="cls-section">
+    <div>+ calculate(enrollments): double</div>
+    <div>+ getName(): String</div>
+  </div>
+</div>
+
+<!-- FourPointGpaStrategy -->
+<div class="uml-class theme-concrete" style="left:1185px;top:530px;width:215px;">
+  <div class="cls-header">FourPointGpaStrategy</div>
+  <div class="cls-section">
+    <div>+ calculate(enrollments): double</div>
+    <div>+ getName(): String</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 7 — SERVICES
+     ════════════════════════════════════════════════ -->
+
+<!-- AuthService -->
+<div class="uml-class theme-service" style="left:1450px;top:30px;width:200px;">
+  <div class="cls-header">AuthService</div>
+  <div class="cls-section">
+    <div>– userRepo: UserRepository</div>
+    <div>– userFactory: UserFactory</div>
+  </div>
+  <div class="cls-section">
+    <div>+ loginStudent(email,pw): Student</div>
+    <div>+ loginProfessor(email,pw): Prof</div>
+    <div>+ loginAdmin(pw): Admin</div>
+    <div>+ signupStudent(...): Student</div>
+    <div>+ signupProfessor(...): Professor</div>
+    <div>+ signupTA(...): TA</div>
+  </div>
+</div>
+
+<!-- EnrollmentService -->
+<div class="uml-class theme-service" style="left:1450px;top:250px;width:205px;">
+  <div class="cls-header">EnrollmentService</div>
+  <div class="cls-section">
+    <div>– observers: List</div>
+    <div>– dropDeadlinePassed: bool</div>
+    <div>– MAX_CREDITS: int = 20</div>
+  </div>
+  <div class="cls-section">
+    <div>+ addObserver(o)</div>
+    <div>+ enroll(student, code)</div>
+    <div>+ drop(student, code)</div>
+    <div>+ setDropDeadlinePassed(b)</div>
+  </div>
+</div>
+
+<!-- GradeService -->
+<div class="uml-class theme-service" style="left:1450px;top:460px;width:205px;">
+  <div class="cls-header">GradeService</div>
+  <div class="cls-section">
+    <div>– gpaStrategy: GpaCalculationStrategy</div>
+  </div>
+  <div class="cls-section">
+    <div>+ setGpaStrategy(s)</div>
+    <div>+ assignGrade(studentId,code,g)</div>
+    <div>+ completeSemester(studentId)</div>
+    <div>+ calculateSGPA(student, sem)</div>
+    <div>+ calculateCGPA(student)</div>
+    <div>+ getEnrollmentsForCourse(code)</div>
+  </div>
+</div>
+
+<!-- ComplaintService -->
+<div class="uml-class theme-service" style="left:1450px;top:660px;width:205px;">
+  <div class="cls-header">ComplaintService</div>
+  <div class="cls-section">
+    <div>– repo: ComplaintRepository</div>
+  </div>
+  <div class="cls-section">
+    <div>+ submit(student, desc)</div>
+    <div>+ resolve(id, details)</div>
+    <div>+ filterByStatus(status)</div>
+    <div>+ filterByDate(from, to)</div>
+    <div>+ getByStudent(id): List</div>
+  </div>
+</div>
+
+<!-- FeedbackService -->
+<div class="uml-class theme-service" style="left:1450px;top:840px;width:205px;">
+  <div class="cls-header"><span class="stereotype">«Assignment 2»</span>FeedbackService</div>
+  <div class="cls-section">
+    <div>– feedbackMap: Map&lt;String,List&gt;</div>
+  </div>
+  <div class="cls-section">
+    <div>+ submitRating(student,code,int)</div>
+    <div>+ submitComment(student,code,str)</div>
+    <div>+ getFeedbackForCourse(code)</div>
+    <div>+ printFeedbackSummary(code)</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 8 — MENUS (Template Method)
+     ════════════════════════════════════════════════ -->
+
+<!-- BaseMenu (abstract) -->
+<div class="uml-class theme-abstract" style="left:255px;top:30px;width:195px;">
+  <div class="cls-header"><span class="stereotype">«abstract» Template Method</span>BaseMenu</div>
+  <div class="cls-section">
+    <div># scanner: Scanner</div>
+  </div>
+  <div class="cls-section">
+    <div>+ run() <em>[final]</em></div>
+    <div class="method">+ printOptions() [abstract]</div>
+    <div class="method">+ handleChoice(c) [abstract]</div>
+    <div># readLine(prompt): String</div>
+    <div># readInt(): int</div>
+    <div># pause()</div>
+  </div>
+</div>
+<div class="pattern-badge badge-template" style="left:257px;top:32px;">TEMPLATE METHOD</div>
+
+<!-- StudentMenu -->
+<div class="uml-class theme-concrete" style="left:30px;top:720px;width:200px;">
+  <div class="cls-header">StudentMenu</div>
+  <div class="cls-section">
+    <div>– student: Student</div>
+    <div>– enrollmentService</div>
+    <div>– gradeService</div>
+    <div>– complaintService</div>
+    <div>– feedbackService</div>
+  </div>
+  <div class="cls-section">
+    <div>+ printOptions()</div>
+    <div>+ handleChoice(c)</div>
+    <div>– viewAvailableCourses()</div>
+    <div>– registerForCourse()</div>
+    <div>– viewSchedule()</div>
+    <div>– viewAcademicProgress()</div>
+    <div>– dropCourse()</div>
+    <div>– submitComplaint()</div>
+    <div>– giveFeedback()</div>
+  </div>
+</div>
+
+<!-- ProfessorMenu -->
+<div class="uml-class theme-concrete" style="left:255px;top:720px;width:200px;">
+  <div class="cls-header">ProfessorMenu</div>
+  <div class="cls-section">
+    <div>– professor: Professor</div>
+    <div>– gradeService</div>
+    <div>– feedbackService</div>
+  </div>
+  <div class="cls-section">
+    <div>+ printOptions()</div>
+    <div>+ handleChoice(c)</div>
+    <div>– viewMyCourses()</div>
+    <div>– updateCourseDetails()</div>
+    <div>– viewEnrolledStudents()</div>
+    <div>– assignGrades()</div>
+    <div>– viewFeedback()</div>
+  </div>
+</div>
+
+<!-- AdminMenu -->
+<div class="uml-class theme-concrete" style="left:462px;top:720px;width:190px;">
+  <div class="cls-header">AdminMenu</div>
+  <div class="cls-section">
+    <div>– admin: Admin</div>
+    <div>– gradeService</div>
+    <div>– complaintService</div>
+  </div>
+  <div class="cls-section">
+    <div>+ printOptions()</div>
+    <div>+ handleChoice(c)</div>
+    <div>– manageCatalog()</div>
+    <div>– manageStudents()</div>
+    <div>– assignProfessor()</div>
+    <div>– handleComplaints()</div>
+    <div>– completeSemester()</div>
+  </div>
+</div>
+
+<!-- LoginMenu -->
+<div class="uml-class theme-concrete" style="left:462px;top:530px;width:190px;">
+  <div class="cls-header">LoginMenu</div>
+  <div class="cls-section">
+    <div>– authService: AuthService</div>
+    <div>– enrollmentService</div>
+    <div>– gradeService</div>
+  </div>
+  <div class="cls-section">
+    <div>+ printOptions()</div>
+    <div>+ handleChoice(c)</div>
+    <div>– studentFlow()</div>
+    <div>– professorFlow()</div>
+    <div>– adminFlow()</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     LAYER 9 — EXCEPTIONS
+     ════════════════════════════════════════════════ -->
+
+<div class="uml-class theme-exception" style="left:255px;top:530px;width:185px;">
+  <div class="cls-header"><span class="stereotype">«exception» Assignment 2</span>CourseFullException</div>
+  <div class="cls-section"><div>– courseCode: String</div></div>
+  <div class="cls-section"><div>+ getCourseCode(): String</div></div>
+</div>
+
+<div class="uml-class theme-exception" style="left:30px;top:1000px;width:195px;">
+  <div class="cls-header"><span class="stereotype">«exception» Assignment 2</span>InvalidLoginException</div>
+  <div class="cls-section"><div>+ InvalidLoginException(role)</div></div>
+</div>
+
+<div class="uml-class theme-exception" style="left:255px;top:1000px;width:195px;">
+  <div class="cls-header"><span class="stereotype">«exception» Assignment 2</span>DropDeadlinePassedException</div>
+  <div class="cls-section"><div>+ DropDeadlinePassedException()</div></div>
+</div>
+
+<div class="uml-class theme-exception" style="left:462px;top:1000px;width:195px;">
+  <div class="cls-header">PrerequisiteNotMetException</div>
+  <div class="cls-section"><div>+ PrerequisiteNotMetException(code, missing)</div></div>
+</div>
+
+<!-- DataSeeder -->
+<div class="uml-class theme-util" style="left:930px;top:1000px;width:185px;">
+  <div class="cls-header"><span class="stereotype">«utility»</span>DataSeeder</div>
+  <div class="cls-section">
+    <div>+ seed() [static]</div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="uml-class theme-util" style="left:930px;top:1100px;width:185px;">
+  <div class="cls-header">Main</div>
+  <div class="cls-section">
+    <div>+ main(args[]) [static]</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     SVG CONNECTORS
+     ════════════════════════════════════════════════ -->
+<svg class="connectors">
+  <defs>
+    <!-- Inheritance arrow (hollow triangle) -->
+    <marker id="inh" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L9,5 L0,10 Z" fill="none" stroke="#7C3AED" stroke-width="1.5"/>
+    </marker>
+    <!-- Implements arrow (hollow triangle, green) -->
+    <marker id="impl" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L9,5 L0,10 Z" fill="none" stroke="#059669" stroke-width="1.5"/>
+    </marker>
+    <!-- Association arrow (filled) -->
+    <marker id="assoc" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#555"/>
+    </marker>
+    <!-- Dependency arrow (filled, orange) -->
+    <marker id="dep" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#EA580C"/>
+    </marker>
+  </defs>
+
+  <!-- User → Student (inheritance) -->
+  <line x1="130" y1="195" x2="130" y2="260" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#inh)"/>
+  <!-- User → Professor (inheritance) -->
+  <polyline points="130,195 130,240 352,240 352,260" fill="none" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#inh)"/>
+  <!-- User → Admin (inheritance) -->
+  <polyline points="130,195 130,235 554,235 554,260" fill="none" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#inh)"/>
+
+  <!-- Student → TeachingAssistant (inheritance) -->
+  <line x1="130" y1="480" x2="130" y2="530" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#inh)"/>
+
+  <!-- BaseMenu → StudentMenu (inheritance) -->
+  <polyline points="350,195 350,700 130,700 130,720" fill="none" stroke="#A21CAF" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#inh)"/>
+  <!-- BaseMenu → ProfessorMenu (inheritance) -->
+  <line x1="350" y1="195" x2="355" y2="720" fill="none" stroke="#A21CAF" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#inh)"/>
+  <!-- BaseMenu → AdminMenu (inheritance) -->
+  <polyline points="350,195 350,700 557,700 557,720" fill="none" stroke="#A21CAF" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#inh)"/>
+  <!-- BaseMenu → LoginMenu (inheritance) -->
+  <polyline points="350,195 350,505 557,505 557,530" fill="none" stroke="#A21CAF" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#inh)"/>
+
+  <!-- EnrollmentObserver → ConsoleEnrollmentObserver (implements) -->
+  <line x1="1292" y1="140" x2="1292" y2="185" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#impl)"/>
+
+  <!-- GpaCalculationStrategy → TenPointGpaStrategy (implements) -->
+  <polyline points="1292,390 1292,410 1260,410 1260,430" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#impl)"/>
+  <!-- GpaCalculationStrategy → FourPointGpaStrategy (implements) -->
+  <polyline points="1292,390 1292,410 1340,410 1340,430 1295,430 1295,530" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#impl)"/>
+
+  <!-- CourseRepository → Course (association) -->
+  <line x1="930" y1="90" x2="880" y2="90" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- UserRepository → Student (association) -->
+  <polyline points="930,390 900,390 900,360 240,360" fill="none" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+  <!-- UserRepository → Professor (association) -->
+  <polyline points="930,410 910,410 910,380 452,380" fill="none" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- ComplaintRepository → Complaint (association) -->
+  <line x1="930" y1="640" x2="880" y2="640" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- UserFactory → UserRepository (dependency) -->
+  <line x1="930" y1="855" x2="930" y2="760" stroke="#EA580C" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#dep)"/>
+
+  <!-- EnrollmentService → EnrollmentObserver (uses) -->
+  <line x1="1450" y1="330" x2="1400" y2="100" stroke="#555" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#assoc)"/>
+
+  <!-- EnrollmentService → CourseFullException (throws) -->
+  <polyline points="1450,320 1420,320 1420,570 650,570 650,555 647,555" fill="none" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#dep)"/>
+
+  <!-- GradeService → GpaCalculationStrategy (uses strategy) -->
+  <line x1="1450" y1="510" x2="1400" y2="380" stroke="#0284C7" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#dep)"/>
+
+  <!-- AuthService → InvalidLoginException (throws) -->
+  <polyline points="1450,80 1440,80 1440,1010 225,1010" fill="none" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#dep)"/>
+
+  <!-- EnrollmentService → DropDeadlinePassedException (throws) -->
+  <polyline points="1450,400 1430,400 1430,1020 450,1020" fill="none" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#dep)"/>
+
+  <!-- Complaint → Status (contains) -->
+  <line x1="750" y1="700" x2="750" y2="720" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- Student → Enrollment (has) -->
+  <line x1="665" y1="380" x2="240" y2="380" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- Student → Complaint (has) -->
+  <polyline points="130,480 130,600 665,600" fill="none" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- Student → Feedback (has) -->
+  <polyline points="240,480 240,870 665,870" fill="none" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- Main → DataSeeder -->
+  <line x1="1017" y1="1100" x2="1017" y2="1070" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+  <!-- Course → Enrollment -->
+  <line x1="772" y1="250" x2="772" y2="310" stroke="#555" stroke-width="1.2" marker-end="url(#assoc)"/>
+
+</svg>
+
+</div><!-- /canvas -->
+</div><!-- /scroll-wrap -->
+
+<p style="text-align:center;font-size:11px;color:#888;margin-top:12px;">
+  Scroll horizontally to see all classes &nbsp;·&nbsp; Total: 34 Java files
+</p>
+</body>
+</html>

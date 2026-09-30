@@ -1,4 +1,11 @@
-public class enrollment {
+package model.course;
+
+/**
+ * Records one student's enrollment in one course.
+ * Holds grade once assigned.
+ */
+public class Enrollment {
+
     private final String studentId;
     private final String studentName;
     private final String courseCode;
@@ -6,7 +13,7 @@ public class enrollment {
     private final int    credits;
     private String grade;          // null until assigned
 
-    public enrollment(String studentId, String studentName,
+    public Enrollment(String studentId, String studentName,
                       String courseCode, String courseTitle, int credits) {
         this.studentId   = studentId;
         this.studentName = studentName;
